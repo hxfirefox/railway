@@ -41,6 +41,10 @@ public class RailwaySystemImpl implements RailwaySystem {
 
     @Override
     public boolean canReach(String srcStation, String dstStation) {
+        if (srcStation.equals(dstStation))
+            return true;
+        if (ways.containsKey(new Path(srcStation, dstStation)))
+            return true;
         return false;
     }
 

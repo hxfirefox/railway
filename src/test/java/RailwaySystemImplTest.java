@@ -80,13 +80,22 @@ public class RailwaySystemImplTest {
     }
 
     @Test
-    public void should_reachable_from_b_to_a() throws Exception {
+    public void should_reachable_from_b_to_b() throws Exception {
         // given
-
         // when
 
         // then
-//        assertThat(railway.canReach("b", "a"), is(true));
-//        assertThat(railway.canReach("a", "b"), is(false));
+        assertThat(railway.canReach("b", "b"), is(true));
+    }
+
+    @Test
+    public void should_reachable_from_b_to_a() throws Exception {
+        // given
+        railway.addRoute("b", "a", 1);
+        // when
+
+        // then
+        assertThat(railway.canReach("b", "a"), is(true));
+        assertThat(railway.canReach("a", "b"), is(false));
     }
 }
