@@ -45,6 +45,17 @@ public class RailwaySystemImplTest {
     }
 
     @Test
+    public void should_not_record_way_when_src_empty() throws Exception {
+        // given
+
+        // when
+        railway.addRoute("", "b", 1);
+        // then
+        final Map<Path, PathInfo> ways = railway.getWays();
+        assertThat(ways.isEmpty(), is(true));
+    }
+
+    @Test
     public void should_not_record_way_when_dst_empty() throws Exception {
         // given
 
@@ -58,10 +69,14 @@ public class RailwaySystemImplTest {
     @Test
     public void should_route_ha_equals_route_hb_add_route_ba() throws Exception {
         // given
-//        railway.addRoute("h", "b", 1);
-//        railway.addRoute("b", "a", 1);
+        railway.addRoute("b", "a", 1);
         // when
+        railway.addRoute("h", "b", 1);
         // then
+        final Map<Path, PathInfo> ways = railway.getWays();
+        assertThat(ways.size(), is(3));
+        assertThat(ways.get(new Path("h", "a")).getNodes().size(), is(3));
+        assertThat(ways.get(new Path("h", "a")).getDistance(), is(2));
     }
 
     @Test
