@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 
 public class RailwaySystemImpl2 implements RailwaySystem {
+    public static final int UNREACHABLE = 0xffff;
     private Set<String> paths = new HashSet<>();
     private Map<String, List<String>> railwayHops = new HashMap<>();
     private Map<String, List<Integer>> railwayDistances = new HashMap<>();
@@ -80,7 +81,7 @@ public class RailwaySystemImpl2 implements RailwaySystem {
         if (srcStation.equals(dstStation))
             return 1;
         if (!canReach(srcStation, dstStation))
-            return 0xffff;
+            return UNREACHABLE;
         final List<String> hops = railwayHops.get(srcStation + dstStation);
         Collections.sort(hops, (o1, o2) -> o1.length() - o2.length());
         return hops.get(0).length();
@@ -91,7 +92,7 @@ public class RailwaySystemImpl2 implements RailwaySystem {
         if (srcStation.equals(dstStation))
             return 0;
         if (!canReach(srcStation, dstStation))
-            return 0xffff;
+            return UNREACHABLE;
         final List<Integer> costs = railwayDistances.get(srcStation + dstStation);
         Collections.sort(costs, (o1, o2) -> o1 - o2);
         return costs.get(0);
