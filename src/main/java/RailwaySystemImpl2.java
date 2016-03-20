@@ -1,6 +1,4 @@
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
@@ -31,7 +29,7 @@ public class RailwaySystemImpl2 implements RailwaySystem {
         Map<String, List<String>> newHops = new HashMap<>();
         Map<String, List<Integer>> newDistances = new HashMap<>();
 
-        paths.stream().filter(x->x.startsWith(dstStation)).forEach(p->{
+        paths.stream().filter(x -> x.startsWith(dstStation)).forEach(p -> {
             final String newKey = srcStation + p.charAt(p.length() - 1);
             final List<String> hops = railwayHops.get(p).stream().map(srcStation::concat).collect(toList());
             final List<Integer> costs = railwayDistances.get(p).stream().map(x -> distance + x).collect(toList());
@@ -40,7 +38,7 @@ public class RailwaySystemImpl2 implements RailwaySystem {
             newDistances.put(newKey, costs);
         });
 
-        paths.stream().filter(x->x.endsWith(srcStation)).forEach(p->{
+        paths.stream().filter(x -> x.endsWith(srcStation)).forEach(p -> {
             final String newKey = p.charAt(0) + dstStation;
             final List<String> hops = railwayHops.get(p).stream().map(x -> x.concat(dstStation)).collect(toList());
             final List<Integer> costs = railwayDistances.get(p).stream().map(x -> distance + x).collect(toList());
@@ -54,34 +52,20 @@ public class RailwaySystemImpl2 implements RailwaySystem {
 
     private void updateRoutes(Set<String> newPaths, Map<String, List<String>> newHops, Map<String, List<Integer>> newDistances) {
         paths.addAll(newPaths);
-        updateHops(newHops);
-        updateCosts(newDistances);
+        update(newHops, railwayHops);
+        update(newDistances, railwayDistances);
     }
 
-    private void updateCosts(Map<String, List<Integer>> newDistances) {
-        for (Map.Entry<String, List<Integer>> cost : newDistances.entrySet()) {
-            final String key = cost.getKey();
-            final List<Integer> costs = cost.getValue();
-            if (railwayDistances.containsKey(key)) {
-                final List<Integer> originCosts = new ArrayList<>(railwayDistances.get(key));
-                originCosts.addAll(costs);
-                railwayDistances.put(key, originCosts);
+    private <K, V> void update(Map<K, List<V>> maps, Map<K, List<V>> sourceMaps) {
+        for (Map.Entry<K, List<V>> map : maps.entrySet()) {
+            final K key = map.getKey();
+            final List<V> value = map.getValue();
+            if (sourceMaps.containsKey(key)) {
+                final List<V> origins = new ArrayList<>(sourceMaps.get(key));
+                origins.addAll(value);
+                sourceMaps.put(key, origins);
             } else {
-                railwayDistances.put(key, costs);
-            }
-        }
-    }
-
-    private void updateHops(Map<String, List<String>> newHops) {
-        for (Map.Entry<String, List<String>> hop : newHops.entrySet()) {
-            final String key = hop.getKey();
-            final List<String> hops = hop.getValue();
-            if (railwayHops.containsKey(key)) {
-                final List<String> originHops = new ArrayList<>(railwayHops.get(key));
-                originHops.addAll(hops);
-                railwayHops.put(key, originHops);
-            } else {
-                railwayHops.put(key, hops);
+                sourceMaps.put(key, value);
             }
         }
     }
