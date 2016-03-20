@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -30,37 +31,34 @@ public class RailwaySystemImpl2 implements RailwaySystem {
         Map<String, List<String>> newHops = new HashMap<>();
         Map<String, List<Integer>> newDistances = new HashMap<>();
 
-        for (String s : paths) {
-            if (s.startsWith(dstStation)) {
-                final String newKey = srcStation + s.charAt(s.length() - 1);
-                newPaths.add(newKey);
-                final List<String> hops = railwayHops.get(s).stream().map(srcStation::concat).collect(toList());
-                final List<Integer> costs = railwayDistances.get(s).stream().map(x -> distance + x).collect(toList());
-                newHops.put(newKey, hops);
-                newDistances.put(newKey, costs);
-            }
-            if (s.endsWith(srcStation)) {
-                final String newKey = s.charAt(0) + dstStation;
-                newPaths.add(newKey);
-                final List<String> hops = railwayHops.get(s).stream().map(x -> x.concat(dstStation)).collect(toList());
-                final List<Integer> costs = railwayDistances.get(s).stream().map(x -> distance + x).collect(toList());
-                newHops.put(newKey, hops);
-                newDistances.put(newKey, costs);
-            }
-        }
+        paths.stream().filter(x->x.startsWith(dstStation)).forEach(p->{
+            final String newKey = srcStation + p.charAt(p.length() - 1);
+            final List<String> hops = railwayHops.get(p).stream().map(srcStation::concat).collect(toList());
+            final List<Integer> costs = railwayDistances.get(p).stream().map(x -> distance + x).collect(toList());
+            newPaths.add(newKey);
+            newHops.put(newKey, hops);
+            newDistances.put(newKey, costs);
+        });
 
+        paths.stream().filter(x->x.endsWith(srcStation)).forEach(p->{
+            final String newKey = p.charAt(0) + dstStation;
+            final List<String> hops = railwayHops.get(p).stream().map(x -> x.concat(dstStation)).collect(toList());
+            final List<Integer> costs = railwayDistances.get(p).stream().map(x -> distance + x).collect(toList());
+            newPaths.add(newKey);
+            newHops.put(newKey, hops);
+            newDistances.put(newKey, costs);
+        });
+
+        updateRoutes(newPaths, newHops, newDistances);
+    }
+
+    private void updateRoutes(Set<String> newPaths, Map<String, List<String>> newHops, Map<String, List<Integer>> newDistances) {
         paths.addAll(newPaths);
-        for (Map.Entry<String, List<String>> hop : newHops.entrySet()) {
-            final String key = hop.getKey();
-            final List<String> hops = hop.getValue();
-            if (railwayHops.containsKey(key)) {
-                final List<String> originHops = new ArrayList<>(railwayHops.get(key));
-                originHops.addAll(hops);
-                railwayHops.put(key, originHops);
-            } else {
-                railwayHops.put(key, hops);
-            }
-        }
+        updateHops(newHops);
+        updateCosts(newDistances);
+    }
+
+    private void updateCosts(Map<String, List<Integer>> newDistances) {
         for (Map.Entry<String, List<Integer>> cost : newDistances.entrySet()) {
             final String key = cost.getKey();
             final List<Integer> costs = cost.getValue();
@@ -70,6 +68,20 @@ public class RailwaySystemImpl2 implements RailwaySystem {
                 railwayDistances.put(key, originCosts);
             } else {
                 railwayDistances.put(key, costs);
+            }
+        }
+    }
+
+    private void updateHops(Map<String, List<String>> newHops) {
+        for (Map.Entry<String, List<String>> hop : newHops.entrySet()) {
+            final String key = hop.getKey();
+            final List<String> hops = hop.getValue();
+            if (railwayHops.containsKey(key)) {
+                final List<String> originHops = new ArrayList<>(railwayHops.get(key));
+                originHops.addAll(hops);
+                railwayHops.put(key, originHops);
+            } else {
+                railwayHops.put(key, hops);
             }
         }
     }
