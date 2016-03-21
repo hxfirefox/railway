@@ -3,7 +3,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 
-public class RailwaySystemImpl2 implements RailwaySystem {
+public class RailwaySystemImpl implements RailwaySystem {
     public static final int UNREACHABLE = 0xffff;
     private Set<String> paths = new HashSet<>();
     private Map<String, List<String>> railwayHops = new HashMap<>();

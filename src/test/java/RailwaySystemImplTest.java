@@ -2,18 +2,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class RailwaySystemImpl2Test {
-    private RailwaySystemImpl2 railway;
+public class RailwaySystemImplTest {
+    private RailwaySystemImpl railway;
 
     @Before
     public void setUp() throws Exception {
-        railway = new RailwaySystemImpl2();
+        railway = new RailwaySystemImpl();
     }
 
     @After
