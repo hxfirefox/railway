@@ -86,8 +86,7 @@ public class RailwaySystemImpl2 implements RailwaySystem {
             return 1;
         if (!canReach(srcStation, dstStation))
             return UNREACHABLE;
-        final List<String> hops = railwayHops.get(srcStation + dstStation);
-        Collections.sort(hops, (o1, o2) -> o1.length() - o2.length());
+        final List<String> hops = sortHopsAscend(srcStation, dstStation);
         return hops.get(0).length();
     }
 
@@ -125,8 +124,13 @@ public class RailwaySystemImpl2 implements RailwaySystem {
             return srcStation;
         if (!canReach(srcStation, dstStation))
             return "";
+        final List<String> hops = sortHopsAscend(srcStation, dstStation);
+        return hops.get(0);
+    }
+
+    private List<String> sortHopsAscend(String srcStation, String dstStation) {
         final List<String> hops = railwayHops.get(srcStation + dstStation);
         Collections.sort(hops, (o1, o2) -> o1.length() - o2.length());
-        return hops.get(0);
+        return hops;
     }
 }
