@@ -119,4 +119,14 @@ public class RailwaySystemImpl2 implements RailwaySystem {
     public Set<String> getPath() {
         return paths;
     }
+
+    public String getMinHopPathStations(String srcStation, String dstStation) {
+        if (srcStation.equals(dstStation))
+            return srcStation;
+        if (!canReach(srcStation, dstStation))
+            return "";
+        final List<String> hops = railwayHops.get(srcStation + dstStation);
+        Collections.sort(hops, (o1, o2) -> o1.length() - o2.length());
+        return hops.get(0);
+    }
 }

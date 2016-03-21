@@ -227,32 +227,56 @@ public class RailwaySystemImpl2Test {
         // then
         assertThat(railway.getMinHopCount("b", "e"), is(3));
     }
-    
+
     @Test
-    public void e_to_c_min_path_is_4() {
-        Assert.assertEquals(4, railwaySystem.getMinCostPath("e", "c"));
+    public void should_minimun_path_from_e_to_c_is_4() throws Exception {
+        // given
+        initRoutes();
+        // when
+
+        // then
+        assertThat(railway.getMinCostPath("e", "c"), is(4));
     }
-    
-    
-//    @Test
-//    public void self_path() {
-//        Assert.assertEquals("e", railwaySystem.getMinHopPathStations("e", "e"));
-//    }
-//
-//    @Test
-//    public void b_to_c_is_bc() {
-//        Assert.assertEquals("bc", railwaySystem.getMinHopPathStations("b", "c"));
-//    }
-//
-//    @Test
-//    public void b_to_e_is_bce() {
-//        Assert.assertEquals("bce", railwaySystem.getMinHopPathStations("b", "e"));
-//    }
-//
-//    @Test
-//    public void can_not_reach_is_empty_string() {
-//        Assert.assertEquals("", railwaySystem.getMinHopPathStations("b", "h"));
-//    }
+
+    @Test
+    public void should_be_self_when_get_minimun_hop_path() throws Exception {
+        // given
+
+        // when
+
+        // then
+        assertThat(railway.getMinHopPathStations("e", "e"), is("e"));
+    }
+
+    @Test
+    public void should_bc_from_b_to_c() throws Exception {
+        // given
+        initRoutes();
+        // when
+
+        // then
+        assertThat(railway.getMinHopPathStations("b", "c"), is("bc"));
+    }
+
+    @Test
+    public void should_bce_from_b_to_e() throws Exception {
+        // given
+        initRoutes();
+        // when
+
+        // then
+        assertThat(railway.getMinHopPathStations("b", "e"), is("bce"));
+    }
+
+    @Test
+    public void should_empty_from_b_to_h() throws Exception {
+        // given
+        initRoutes();
+        // when
+
+        // then
+        assertThat(railway.getMinHopPathStations("b", "h"), is(""));
+    }
 
     private void initRoutes() {
         railway.addRoute("h", "b", 1);
