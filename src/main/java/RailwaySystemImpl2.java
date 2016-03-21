@@ -18,8 +18,12 @@ public class RailwaySystemImpl2 implements RailwaySystem {
         if (dstStation.length() != 0) {
             final String edge = srcStation + dstStation;
             paths.add(edge);
-            railwayHops.put(edge, asList(edge));
-            railwayDistances.put(edge, asList(distance));
+            if (railwayDistances.containsKey(edge) || railwayHops.containsKey(edge)) {
+                railwayDistances.get(edge).add(distance);
+            } else {
+                railwayHops.put(edge, asList(edge));
+                railwayDistances.put(edge, asList(distance));
+            }
         }
 
         mergeRoutes(srcStation, dstStation, distance);
